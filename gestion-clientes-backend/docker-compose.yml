@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  ### MySQL database for Orders
+  db:
+    container_name: Gestion_Clientes_srping_boot
+    image: mysql:8.0.33
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: gestion_clientes_srping_boot
+      MYSQL_USER: uncledave
+      MYSQL_PASSWORD: Test123
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    expose:
+      - 3306

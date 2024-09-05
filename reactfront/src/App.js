@@ -10,8 +10,9 @@ function App() {
         <div className="container">
           <Routes>
             <Route exact path="/" element={<ListClientesComponet />}></Route>
-            <Route exact path="/Clientes" element={<ListClientesComponet />}></Route>
+            <Route exact path="/clientes" element={<ListClientesComponet />}></Route>
             <Route exact path="/add-cliente" element={< AddClienteComponent />}></Route>
+            <Route exact path="/edit-cliente/:id" element={< AddClienteComponent />}></Route>
           </Routes>
         </div>
       </BrowserRouter>

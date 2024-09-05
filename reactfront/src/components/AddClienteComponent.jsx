@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ClienteService from "../services/ClienteService";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export const AddClienteComponent = () => {
+
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [mail, setMail] = useState("");
-
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const saveCliente = (e) => {
+  const saveOrUpdateCliente = (e) => {
     e.preventDefault();
     const cliente = { nombre, apellido, mail };
-    ClienteService.crearCliente(cliente)
+
+    if(id){
+      ClienteService.updateCliente(id,cliente)
       .then((response) => {
         console.log(response.data);
         navigate("/clientes");
@@ -21,14 +24,48 @@ export const AddClienteComponent = () => {
       .catch((error) => {
         console.log("error", error);
       });
+
+    }else{
+
+      ClienteService.crearCliente(cliente)
+      .then((response) => {
+        console.log(response.data);
+        navigate("/clientes");
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+
+    }
   };
+
+  useEffect(() => {
+    ClienteService.getClienteById(id)
+      .then((response) => {
+        setNombre(response.data.nombre);
+        setApellido(response.data.apellido);
+        setMail(response.data.mail);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  },[id])
+
+  const title = () =>{
+    if(id){
+      return <h2 className="tect-center">Actualizar cliente</h2>
+    }else{
+      return <h2 className="tect-center">Agregar cliente</h2>
+    }
+  }
+
 
   return (
     <div>
       <div className="container">
         <div className="row">
           <div className="card col-md-6 offset-md-3 offset-md-3 ">
-            <h2 className="text-center"> Registro de clientes</h2>
+            <h2 className="text-center"> { title()}</h2>
             <div className="card-body">
               <form>
                 <div className="form-group mb-2">
@@ -66,7 +103,7 @@ export const AddClienteComponent = () => {
                 </div>
                 <button
                   className="btn btn-success"
-                  onClick={(e) => saveCliente(e)}
+                  onClick={(e) => saveOrUpdateCliente(e)}
                 >
                   Guardar
                 </button>
